@@ -1,25 +1,3 @@
-// using mongodb
-const db = require("../database").db;
-
-class User {
-  constructor(name) {
-    this.name = name;
-  }
-
-  save() {
-    db.collection("user")
-      .insertOne(this)
-      .then((result) => {
-        console.log("Data saved properly"); // Corrected message
-      })
-      .catch((err) => {
-        console.error(err); // Using console.error for error messages
-      });
-  }
-}
-
-module.exports = User;
-
 // const Sequelize = require("sequelize");
 // const sequelize = require("../database");
 
@@ -51,3 +29,15 @@ module.exports = User;
 //     return db.execute("SELECT * FROM `student` WHERE 1");
 //   }
 // };
+const mongoose = require("mongoose");
+const userSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  age: {
+    type: Number,
+    required: true,
+  },
+});
+module.exports = mongoose.model("User", userSchema);

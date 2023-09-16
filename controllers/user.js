@@ -2,9 +2,27 @@ const path = require("path");
 const User = require("../Modules/user");
 
 exports.getLogin = (req, res, next) => {
-  return res.render("login", {
-    allUser: [],
-  });
+  let login = req.session.home;
+  console.log(login);
+  //USING MONGODB**
+
+  // DATA CREATE
+  // return res.render("login", {
+  //   allUser: data,
+  // });
+
+  // DATA FATCH
+  User.find()
+    .then((data) => {
+      return res.render("login", {
+        Loggedin: login,
+        allUser: data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
   // User.findAll()
   //   .then((result) => {
   //     return res.render("login", {
@@ -39,14 +57,17 @@ exports.getHeader = (req, res, next) => {
   return res.render("header");
 };
 exports.getCreate = (req, res, next) => {
-  return res.render("create", {});
+  return res.render("create");
 };
 
 exports.postUser = (req, res, next) => {
-  //useng mongodb
-  let user = new User(req.body.userName);
+  //USING MONGO
+  //CODE IMPORT FROM SEQULIZE
+  let user = new User({
+    name: req.body.userName,
+    age: req.body.age,
+  });
   user.save();
-
   // User.create({
   //   name: req.body.userName,
   // })
@@ -66,6 +87,49 @@ exports.postUser = (req, res, next) => {
 };
 
 exports.getProfile = (req, res, next) => {
-  let user = req.params.userName;
-  console.log(user);
+  // DATA UPDATE
+  let _id = req.params.id;
+  User.findById(_id)
+    .then((data) => {
+      return res.render("showUser", {
+        user: data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+exports.postProfile = (req, res, next) => {
+  // DATA UPDATE
+  let _id = req.params.id;
+
+  User.findById(_id)
+    .then((data) => {
+      data.name = req.body.userName;
+      data.age = req.body.age;
+      data.save();
+      return res.redirect("/login");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.deleteUser = (req, res, next) => {
+  let _id = req.params.id;
+  User.findByIdAndDelete(_id)
+    .then(() => {
+      return res.redirect("/login");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+exports.getHome = (req, res, next) => {
+  return res.render("home");
+};
+exports.postHome = (req, res, next) => {
+  req.session.home = true;
+  return res.redirect("/login");
 };

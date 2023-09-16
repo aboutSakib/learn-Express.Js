@@ -1,21 +1,25 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
 
-let db;
+// let db;
 
-const connectMongodb = (next) => {
-  mongoose
-    .connect("mongodb://127.0.0.1:27017/testNode")
-    .then((result) => {
-      console.log("Connected to the database");
-      db = result.connection;
-      next();
-    })
-    .catch((err) => {
-      console.log("Error connecting to the database:", err);
-    });
-};
+// const connectMongodb = (next) => {
+//   mongoose
+//     .connect("mongodb://127.0.0.1:27017/testNode")
+//     .then((result) => {
+//       console.log("Connected to the database");
+//       db = result.connection; // Change result.db() to result.connection
+//       next();
+//     })
+//     .catch((err) => {
+//       console.log("Error connecting to the database:", err);
+//     });
+// };
 
-module.exports = { db, connectMongodb };
+// Export the connectMongodb function
+module.exports = connectMongodb;
+
+// Export the db variable
+exports.db = db;
 
 // const connectToDatabase = async () => {
 //   try {
